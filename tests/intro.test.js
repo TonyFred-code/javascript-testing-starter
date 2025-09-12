@@ -1,5 +1,5 @@
 import { describe, test, it, expect } from "vitest";
-import { calculateAverage, fizzBuzz, max } from "../src/intro.js";
+import { calculateAverage, factorial, fizzBuzz, max } from "../src/intro.js";
 
 describe("max", () => {
   test("should return the first argument if it is greater", () => {
@@ -50,5 +50,24 @@ describe("calculateAverage", () => {
 
   test("should calculate the average of an array with three elements", () => {
     expect(calculateAverage([1, 2, 3])).toBe(2);
+  });
+});
+
+describe("factorial", () => {
+  test("should return NaN if arg is less than 0 (-ve)", () => {
+    expect(factorial(-2)).toBe(NaN);
+  });
+
+  test("should return factorial of 0", () => {
+    expect(factorial(0)).toBe(1);
+  });
+
+  test("should return factorial of 1", () => {
+    expect(factorial(1)).toBe(1);
+  });
+
+  test("should return factorial of valid numbers", () => {
+    expect(factorial(2)).toBe(2);
+    expect(factorial(5)).toBe(120);
   });
 });
