@@ -142,30 +142,45 @@ describe("canDrive", () => {
   const minUSAge = 16;
   const minUKAge = 17;
 
+  test.each([
+    {
+      age: 15,
+      country: "US",
+      result: false,
+    },
+    {
+      age: 16,
+      country: "US",
+      result: true,
+    },
+    {
+      age: 17,
+      country: "US",
+      result: true,
+    },
+    {
+      age: 16,
+      country: "UK",
+      result: false,
+    },
+    {
+      age: 17,
+      country: "UK",
+      result: true,
+    },
+    {
+      age: 18,
+      country: "UK",
+      result: true,
+    },
+  ])(
+    "should return $result for ($age, $country)",
+    ({ age, country, result }) => {
+      expect(canDrive(age, country)).toBe(result);
+    }
+  );
+
   test("should return invalid for invalid country code", () => {
     expect(canDrive(18, "NGN")).toMatch(/invalid/i);
-  });
-
-  test("should return false if below age for US", () => {
-    expect(canDrive(minUSAge - 1, "US")).toBe(false);
-  });
-
-  test("should return true if exactly min age for US", () => {
-    expect(canDrive(minUSAge, "US")).toBe(true);
-  });
-
-  test("should return true if older than min age for US", () => {
-    expect(canDrive(minUSAge + 1, "US")).toBe(true);
-  });
-
-  test("should return false if younger than min age for UK", () => {
-    expect(canDrive(minUKAge - 1, "UK")).toBe(false);
-  });
-  test("should return true if exactly min age for UK", () => {
-    expect(canDrive(minUKAge, "UK")).toBe(true);
-  });
-
-  test("should return true if older than min age for UK", () => {
-    expect(canDrive(minUKAge + 1, "UK")).toBe(true);
   });
 });
