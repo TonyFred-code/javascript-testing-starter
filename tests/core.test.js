@@ -125,7 +125,8 @@ describe("isValidUsername", () => {
     expect(isValidUsername("s".repeat(maxLength + 1))).toBe(false);
   });
   test("should return true if username is within expected range", () => {
-    expect(isValidUsername("shorter")).toBe(true);
+    expect(isValidUsername("s".repeat(minLength + 1))).toBe(true);
+    expect(isValidUsername("s".repeat(maxLength - 1))).toBe(true);
   });
 
   test("should return false for invalid input types ", () => {
