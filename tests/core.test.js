@@ -2,6 +2,7 @@ import { describe, test, expect } from "vitest";
 import {
   calculateDiscount,
   canDrive,
+  fetchData,
   getCoupons,
   isPriceInRange,
   isValidUsername,
@@ -199,5 +200,14 @@ describe("canDrive", () => {
 
   test("should return invalid for invalid country code", () => {
     expect(canDrive(18, "NGN")).toMatch(/invalid/i);
+  });
+});
+
+describe("fetchData", () => {
+  test("should return a promise that will resolve to an array of numbers", () => {
+    fetchData().then((result) => {
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toBeGreaterThan(0);
+    });
   });
 });
