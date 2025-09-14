@@ -1,4 +1,4 @@
-import { describe, test, expect } from "vitest";
+import { describe, test, expect, beforeEach } from "vitest";
 import {
   calculateDiscount,
   canDrive,
@@ -6,6 +6,7 @@ import {
   getCoupons,
   isPriceInRange,
   isValidUsername,
+  Stack,
   validateUserInput,
 } from "../src/core.js";
 
@@ -208,6 +209,118 @@ describe("fetchData", () => {
     fetchData().then((result) => {
       expect(Array.isArray(result)).toBe(true);
       expect(result.length).toBeGreaterThan(0);
+    });
+  });
+});
+
+describe("Stack", () => {
+  let stack;
+
+  beforeEach(() => {
+    stack = new Stack();
+  });
+
+  describe("push", () => {
+    test("should add items to stack", () => {
+      expect(stack.size()).toBe(0);
+      stack.push(1);
+      expect(stack.size()).toBe(1);
+      expect(stack.peek()).toBe(1);
+    });
+  });
+
+  describe("pop", () => {
+    test("should remove an item from the stack", () => {
+      expect(stack.size()).toBe(0);
+
+      stack.push(1);
+      stack.pop();
+      expect(stack.size()).toBe(0);
+    });
+
+    test("should return the removed item from the stack", () => {
+      stack.push(1);
+      expect(stack.pop()).toBe(1);
+
+      stack.push(2);
+      stack.push(3);
+      expect(stack.pop()).toBe(3);
+      expect(stack.size()).toBe(1);
+    });
+
+    test("should throw error when called on an empty stack", () => {
+      expect(() => {
+        stack.pop();
+      }).toThrow();
+    });
+  });
+
+  describe("peek", () => {
+    test("should return the item at the top of the stack without removing it", () => {
+      stack.push(1);
+      stack.push(2);
+
+      expect(stack.peek()).toBe(2);
+      expect(stack.size()).toBe(2);
+    });
+
+    test("should throw error when called on an empty stack", () => {
+      expect(() => {
+        stack.peek();
+      }).toThrow();
+    });
+  });
+
+  describe("isEmpty", () => {
+    test("should return false when called on an empty stack", () => {
+      expect(stack.isEmpty()).toBe(true);
+    });
+
+    test("should return false when called on a non-empty stack", () => {
+      stack.push(1);
+
+      expect(stack.isEmpty()).toBe(false);
+    });
+
+    test("should reflect modification to stack ", () => {
+      stack.push(1);
+
+      expect(stack.isEmpty()).toBe(false);
+
+      stack.pop();
+
+      expect(stack.isEmpty()).toBe(true);
+    });
+  });
+
+  describe("size", () => {
+    test("should return 0 for empty stack", () => {
+      expect(stack.size()).toBe(0);
+    });
+
+    test("should return correct size after adding items on stack", () => {
+      stack.push(8);
+      stack.push(6);
+      expect(stack.size()).toBe(2);
+    });
+
+    test("should return correct size after adding and removing items on stack", () => {
+      stack.push(7);
+      expect(stack.size()).toBe(1);
+      stack.pop();
+      expect(stack.size()).toBe(0);
+    });
+  });
+
+  describe("clear", () => {
+    test("should remove all items on stack", () => {
+      stack.push(1);
+      stack.push(2);
+      stack.push(3);
+
+      stack.clear();
+
+      expect(stack.isEmpty()).toBe(true);
     });
   });
 });
