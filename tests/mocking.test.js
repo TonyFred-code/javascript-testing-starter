@@ -4,16 +4,26 @@ import {
   getPriceInCurrency,
   getShippingInfo,
   renderPage,
+  signUp,
   submitOrder,
 } from "../src/mocking.js";
 import { getShippingQuote } from "../src/libs/shipping.js";
 import { trackPageView } from "../src/libs/analytics.js";
 import { charge } from "../src/libs/payment.js";
+import { sendEmail } from "../src/libs/email.js";
 
 vi.mock("../src/libs/currency.js");
 vi.mock("../src/libs/shipping.js");
 vi.mock("../src/libs/analytics.js");
 vi.mock("../src/libs/payment.js");
+vi.mock("../src/libs/email.js", async (importOriginal) => {
+  const originalModule = await importOriginal();
+
+  return {
+    ...originalModule,
+    sendEmail: vi.fn(),
+  };
+});
 
 describe("getPriceInCurrency", () => {
   it("should return price in a target currency", () => {
@@ -90,5 +100,31 @@ describe("submitOrder", () => {
 
     expect(result).toHaveProperty("success", true);
     expect(result).not.toHaveProperty("error");
+  });
+});
+
+describe("signUp", () => {
+  const validEmail = "name@domain.com";
+
+  it("should return false if email is not valid", async () => {
+    const result = await signUp("a");
+
+    expect(result).toBe(false);
+  });
+
+  it("should return true if email is valid", async () => {
+    const result = await signUp(validEmail);
+
+    expect(result).toBe(true);
+  });
+
+  it("should send welcome message", async () => {
+    await signUp(validEmail);
+
+    expect(sendEmail).toHaveBeenCalled();
+    const args = vi.mocked(sendEmail).mock.calls[0];
+    const [email, message] = args;
+    expect(email).toBe(validEmail);
+    expect(message).toMatch(/welcome/i);
   });
 });
