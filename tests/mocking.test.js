@@ -1,6 +1,7 @@
 import { it, expect, describe, vi } from "vitest";
 import { getExchangeRate } from "../src/libs/currency.js";
 import {
+  getDiscount,
   getPriceInCurrency,
   getShippingInfo,
   isOnline,
@@ -159,5 +160,27 @@ describe("isOnline", () => {
 
     vi.setSystemTime("2025-09-15 19:59");
     expect(isOnline()).toBe(true);
+  });
+});
+
+describe("getDiscount", () => {
+  it("should return a discount for christmas day", () => {
+    vi.setSystemTime("2024-12-25 00:00");
+
+    expect(getDiscount()).toBe(0.2);
+
+    vi.setSystemTime("2024-12-25 23:59");
+
+    expect(getDiscount()).toBe(0.2);
+  });
+
+  it("should return zero discount for any day that is not christmas", () => {
+    vi.setSystemTime("2024-12-24 00:01");
+
+    expect(getDiscount()).toBe(0);
+
+    vi.setSystemTime("2024-12-26 00:01");
+
+    expect(getDiscount()).toBe(0);
   });
 });
