@@ -3,6 +3,7 @@ import { getExchangeRate } from "../src/libs/currency.js";
 import {
   getPriceInCurrency,
   getShippingInfo,
+  isOnline,
   login,
   renderPage,
   signUp,
@@ -140,5 +141,23 @@ describe("login", () => {
     await login(email);
     const code = spy.mock.results[0].value.toString();
     expect(sendEmail).toHaveBeenCalledWith(email, code);
+  });
+});
+
+describe("isOnline", () => {
+  it("should return false if outside opening hours", () => {
+    vi.setSystemTime("2025-09-15 07:59");
+    expect(isOnline()).toBe(false);
+
+    vi.setSystemTime("2025-09-15 20:01");
+    expect(isOnline()).toBe(false);
+  });
+
+  it("should return true if within opening hours", () => {
+    vi.setSystemTime("2025-09-15 08:01");
+    expect(isOnline()).toBe(true);
+
+    vi.setSystemTime("2025-09-15 19:59");
+    expect(isOnline()).toBe(true);
   });
 });
