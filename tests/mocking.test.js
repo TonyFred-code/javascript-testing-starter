@@ -3,6 +3,7 @@ import { getExchangeRate } from "../src/libs/currency.js";
 import {
   getPriceInCurrency,
   getShippingInfo,
+  login,
   renderPage,
   signUp,
   submitOrder,
@@ -11,6 +12,7 @@ import { getShippingQuote } from "../src/libs/shipping.js";
 import { trackPageView } from "../src/libs/analytics.js";
 import { charge } from "../src/libs/payment.js";
 import { sendEmail } from "../src/libs/email.js";
+import security from "../src/libs/security.js";
 
 vi.mock("../src/libs/currency.js");
 vi.mock("../src/libs/shipping.js");
@@ -126,5 +128,17 @@ describe("signUp", () => {
     const [email, message] = args;
     expect(email).toBe(validEmail);
     expect(message).toMatch(/welcome/i);
+  });
+});
+
+describe("login", () => {
+  it("should send email", async () => {
+    const spy = vi.spyOn(security, "generateCode");
+
+    const email = "name@domain.com";
+
+    await login(email);
+    const code = spy.mock.results[0].value.toString();
+    expect(sendEmail).toHaveBeenCalledWith(email, code);
   });
 });
