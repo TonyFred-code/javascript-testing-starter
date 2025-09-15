@@ -123,7 +123,7 @@ describe("signUp", () => {
   it("should send welcome message", async () => {
     await signUp(validEmail);
 
-    expect(sendEmail).toHaveBeenCalled();
+    expect(sendEmail).toHaveBeenCalledOnce();
     const args = vi.mocked(sendEmail).mock.calls[0];
     const [email, message] = args;
     expect(email).toBe(validEmail);
